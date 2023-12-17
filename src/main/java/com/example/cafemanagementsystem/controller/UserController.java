@@ -22,7 +22,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(path = "/singUp")
+    @PostMapping(path = "/signUp")
     public ResponseEntity<String> singUp(@RequestBody(required = true)Map<String,String> requestMap){
         try {
             return  userService.singUp(requestMap);
