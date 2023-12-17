@@ -16,6 +16,10 @@ import java.util.Objects;
 @Service
 public class CustomerUsersDetailsService implements UserDetailsService {
 
+
+    // Spring Security konfigürasyonu sırasında kullanılır ve Spring Security'nin kimlik doğrulama işlemlerinde,
+    // özellikle kullanıcı adı/şifre doğrulamasında, kullanıcı detaylarını sağlamak için kullanılır.
+
     @Autowired
     UserRepository userRepository;
 

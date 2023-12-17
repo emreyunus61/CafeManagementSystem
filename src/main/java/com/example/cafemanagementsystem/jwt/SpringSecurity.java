@@ -32,6 +32,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
       auth.userDetailsService(customerUserDetailsService);
     }
 
+    @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
     }
@@ -49,7 +50,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user/login","/user/signup","/user/forgotPassword")
+                .antMatchers("/user/login","/user/forgotPassword")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

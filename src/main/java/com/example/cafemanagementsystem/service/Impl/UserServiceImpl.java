@@ -2,12 +2,18 @@ package com.example.cafemanagementsystem.service.Impl;
 
 import com.example.cafemanagementsystem.constents.CafeConstans;
 import com.example.cafemanagementsystem.entity.User;
+import com.example.cafemanagementsystem.jwt.CustomerUsersDetailsService;
+import com.example.cafemanagementsystem.jwt.JwtFilter;
+import com.example.cafemanagementsystem.jwt.JwtUtil;
 import com.example.cafemanagementsystem.repository.UserRepository;
 import com.example.cafemanagementsystem.service.UserService;
 import com.example.cafemanagementsystem.utils.CafeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -19,8 +25,17 @@ public class UserServiceImpl implements UserService {
 
     private  final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private  final AuthenticationManager authenticationManager;
+
+    private  final CustomerUsersDetailsService customerUsersDetailsService;
+
+    private final JwtUtil jwtUtil;
+
+    public UserServiceImpl(UserRepository userRepository, AuthenticationManager authenticationManager, CustomerUsersDetailsService customerUsersDetailsService, JwtFilter jwtFilter, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
+        this.authenticationManager = authenticationManager;
+        this.customerUsersDetailsService = customerUsersDetailsService;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -65,10 +80,38 @@ public class UserServiceImpl implements UserService {
         user.setContactNumber(requestMap.get("contactNumber"));
         user.setEmail(requestMap.get("email"));
         user.setPassword(requestMap.get("password"));
-        user.setStatus(requestMap.get("false"));
-        user.setRole(requestMap.get("user"));
+        user.setStatus("false");
+        user.setRole("user");
 
         return  user;
     }
+
+    @Override
+    public ResponseEntity<String> login(Map<String, String> requestMap) {
+        log.info("Inside login" );
+        try {
+            Authentication auth= authenticationManager.authenticate(
+                   new UsernamePasswordAuthenticationToken(requestMap.get("email"),requestMap.get("password"))
+            );
+            if (auth.isAuthenticated()){
+                if (customerUsersDetailsService.getUserDetail().getStatus().equalsIgnoreCase("true")){
+                    return  new ResponseEntity<String>("{\"token\":\""+
+                        jwtUtil.generateToken(customerUsersDetailsService.getUserDetail().getEmail(),
+                                customerUsersDetailsService.getUserDetail().getRole())+"\"}",
+                            HttpStatus.OK  );
+                }
+                else {
+                    return  new ResponseEntity<String>("{\"message\":\""+"Wait for admin approval."+"\"}",
+                            HttpStatus.BAD_REQUEST);
+                }
+            }
+        }catch (Exception e){
+            log.error("{}",e);
+        }
+
+        return  new ResponseEntity<String>("{\"message\":\""+"Bad Credentials."+"\"}",
+                HttpStatus.BAD_REQUEST);
+    }
+
 
 }
