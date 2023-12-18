@@ -10,6 +10,7 @@ import com.example.cafemanagementsystem.repository.UserRepository;
 import com.example.cafemanagementsystem.service.UserService;
 import com.example.cafemanagementsystem.utils.CafeUtils;
 import com.example.cafemanagementsystem.utils.EmailUtils;
+import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -172,5 +173,43 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public ResponseEntity<String> checkToken() {
+        return  CafeUtils.getResponseEntity("true",HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(Map<String, String> requestMap) {
+        try {
+               User userObj = userRepository.findByEmail(jwtFilter.getUserName());
+               if (!userObj.equals(null)){
+                   if (userObj.getPassword().equals(requestMap.get("oldPassword"))) {
+                       userObj.setPassword(requestMap.get("newPassword"));
+                       userRepository.save(userObj);
+                       return  CafeUtils.getResponseEntity("Password Updated Succesfully",HttpStatus.OK);
+                   }
+                   return  CafeUtils.getResponseEntity("Incorrent Old Password",HttpStatus.BAD_REQUEST);
+               }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> forgotPassword(Map<String, String> requestMap) {
+        try {
+            User user = userRepository.findByEmail(requestMap.get("email"));
+            if (!Objects.isNull(user) && !Strings.isNullOrEmpty(requestMap.get("email"))){
+                 emailUtils.forgotMail(user.getEmail(), "Credentials by Cafe Management System",user.getPassword());
+                return  CafeUtils.getResponseEntity("Check your mail for Credentials",HttpStatus.OK);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return  CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

@@ -71,4 +71,37 @@ public class UserController {
     }
 
 
+    @GetMapping(path = "/checkToken")
+    public ResponseEntity<String> checkToken(){
+        try {
+            return  userService.checkToken();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping(path = "/changePassword")
+    public ResponseEntity<String> changePassword(@RequestBody Map<String,String> requestMap){
+        try {
+            return  userService.changePassword(requestMap);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @PostMapping(path = "/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestBody Map<String,String> requestMap){
+        try {
+            return  userService.forgotPassword(requestMap);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 }
