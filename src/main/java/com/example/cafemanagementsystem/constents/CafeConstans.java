@@ -6,4 +6,6 @@ public class CafeConstans {
 
     public  static  final  String INVALID_DATE = "Invalid Data";
 
+    public  static  final  String UNAUTHORIZED_ACCES= "Unauthorized acces";
+
 }
