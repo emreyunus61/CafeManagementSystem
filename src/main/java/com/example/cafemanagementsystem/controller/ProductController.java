@@ -1,8 +1,8 @@
 package com.example.cafemanagementsystem.controller;
 
 import com.example.cafemanagementsystem.constents.CafeConstans;
-import com.example.cafemanagementsystem.entity.Category;
-import com.example.cafemanagementsystem.service.CategoryService;
+import com.example.cafemanagementsystem.dto.ProductDto;
+import com.example.cafemanagementsystem.service.ProductService;
 import com.example.cafemanagementsystem.utils.CafeUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,43 +12,43 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
-
 @RestController
-@RequestMapping(path = "/category")
-public class CategoryController {
+@RequestMapping(path = "/product")
+public class ProductController {
 
-    private final CategoryService categoryService;
+    private final ProductService productService;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
 
 
     @PostMapping(path = "/add")
-    public ResponseEntity<String> addNewCategory(@RequestBody(required = true) Map<String, String> requsetMap) {
+    public ResponseEntity<String> addNewProduct(@RequestBody Map<String, String> requsetMap) {
         try {
-            return categoryService.addNewCategory(requsetMap);
+            return productService.addNewProduct(requsetMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
     @GetMapping(path = "/get")
-    public ResponseEntity<List<Category>> getAllCategory(@RequestBody(required = false) String filterValue) {
+    ResponseEntity<List<ProductDto>> getAllProduct() {
         try {
-            return categoryService.getAllCategory(filterValue);
+            return productService.getAllProduct();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+
     @PostMapping(path = "/update")
-    public ResponseEntity<String> updateCategory(@RequestBody(required = true) Map<String, String> requsetMap) {
+    public ResponseEntity<String> updateProduct(@RequestBody Map<String, String> requsetMap) {
         try {
-            return categoryService.updateCategory(requsetMap);
+            return productService.updateProduct(requsetMap);
         } catch (Exception e) {
             e.printStackTrace();
         }
