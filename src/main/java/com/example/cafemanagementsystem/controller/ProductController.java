@@ -55,5 +55,50 @@ public class ProductController {
         return CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @PostMapping(path = "/delete/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Integer id) {
+        try {
+            return productService.deleteProduct(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+
+    @PostMapping(path = "/updateStatus")
+    public ResponseEntity<String> updateStatus(@RequestBody Map<String, String> requsetMap) {
+        try {
+            return productService.updateStatus(requsetMap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstans.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @GetMapping(path = "/getByCategory/{id}")
+    public ResponseEntity<List<ProductDto>> getByCategory(@PathVariable Integer id) {
+        try {
+            return productService.getByCategory(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+    @GetMapping(path = "/getById/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable Integer id) {
+        try {
+            return productService.getProductById(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>(new ProductDto(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
 
 }

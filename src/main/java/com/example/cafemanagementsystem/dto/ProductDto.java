@@ -34,4 +34,18 @@ public class ProductDto {
         this.categoryId = categoryId;
         this.categoryName = categoryName;
     }
+
+
+    public ProductDto(Integer id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
+    public ProductDto(Integer id, String name, String description,Integer price){
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
 }
