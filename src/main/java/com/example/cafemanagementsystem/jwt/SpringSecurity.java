@@ -50,7 +50,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/user/login","/user/forgotPassword")
+                .antMatchers("/user/login","/user/forgotPassword","/user/signup")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
