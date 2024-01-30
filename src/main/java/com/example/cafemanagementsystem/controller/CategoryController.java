@@ -36,7 +36,7 @@ public class CategoryController {
     }
 
     @GetMapping(path = "/get")
-    public ResponseEntity<List<Category>> getAllCategory(@RequestBody(required = false) String filterValue) {
+    public ResponseEntity<List<Category>> getAllCategory(@RequestParam(required = false) String filterValue) {
         try {
             return categoryService.getAllCategory(filterValue);
         } catch (Exception e) {
